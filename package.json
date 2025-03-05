@@ -1,0 +1,23 @@
+{
+  "name": "laurarantonen.github.io",
+  "version": "1.0.0",
+  "description": "I'm Laura and I'm a UX Designer and game developer based in Helsinki, Finland.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laurarantonen/laurarantonen.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laurarantonen/laurarantonen.github.io/issues"
+  },
+  "homepage": "https://github.com/laurarantonen/laurarantonen.github.io#readme",
+  "dependencies": {
+    "three": "^0.174.0"
+  }
+}
