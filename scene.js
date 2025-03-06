@@ -9,7 +9,7 @@ export function createScene() {
 
     // Outline creation
     const edges = new THREE.EdgesGeometry(geometry); // Extract edges of the geometry
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }); // Black outline
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1 }); // Black outline
     const outline = new THREE.LineSegments(edges, lineMaterial); // Render the edges as line segments
     
     const group = new THREE.Group();

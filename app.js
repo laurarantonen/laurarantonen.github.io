@@ -3,6 +3,7 @@
 import { createScene } from './scene.js';
 import { createRenderer } from './renderer.js';
 import { createCamera } from './camera.js';
+import { setupClickHandler } from './clickHandler.js';
 
 // Main init 
 function init () {
@@ -11,6 +12,9 @@ function init () {
     const camera = createCamera();
 
     scene.add(camera);
+
+    // Init click handler for test cube
+    setupClickHandler(group.children[0], camera);
     
     animate(scene, group, camera, renderer)
 }
