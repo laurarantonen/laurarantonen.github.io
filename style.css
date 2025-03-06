@@ -1,0 +1,51 @@
+/* style.css for main html */
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#defaultPanel {
+
+}
+
+#secondPanel {
+    right: 0;
+}
+
+.panel {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    z-index: 10; /* Ensures that the panel stays above the 3D scene */
+    font-family: 'Funnel Sans', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 14px;
+
+    /* Add box shadow */
+    box-shadow:
+            1px 2px 2px hsl(220deg 60% 50% / 0.333),
+            2px 4px 4px hsl(220deg 60% 50% / 0.333),
+            3px 6px 6px hsl(220deg 60% 50% / 0.333);
+}
+
+h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+a {
+    color: #3a33ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
