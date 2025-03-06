@@ -1,7 +1,5 @@
 ﻿import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js';
 
-let glowing = false;
-
 export function setupClickHandler(outline, camera) {
     window.addEventListener('click', (event) => onMouseClick(event, outline, camera), false);
 }
