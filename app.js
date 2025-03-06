@@ -20,11 +20,16 @@ function init () {
     setupResizeHandler(camera, frustumSize, renderer);
     
     // Init panel handler for UI, if one exists
-    const panel = document.getElementById('panel');
-    if (panel){
-        setupPanelHandler(panel);   
+    const defaultPanel = document.getElementById('defaultPanel');
+    if (defaultPanel){
+        setupPanelHandler(defaultPanel);   
     }
-    
+    const secondPanel = document.getElementById('secondPanel');
+    if (secondPanel){
+        setupPanelHandler(secondPanel);
+    }
+
+
     animate(scene, group, camera, renderer)
 }
 

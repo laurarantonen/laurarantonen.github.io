@@ -5,7 +5,15 @@ body {
     overflow: hidden;
 }
 
-#panel {
+#defaultPanel {
+
+}
+
+#secondPanel {
+    right: 0;
+}
+
+.panel {
     position: absolute;
     width: fit-content;
     height: fit-content;
@@ -14,7 +22,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     cursor: pointer;
-    z-index: 10; /* Make sure the panel stays above the 3D scene */
+    z-index: 10; /* Ensures that the panel stays above the 3D scene */
     font-family: 'Funnel Sans', sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
@@ -34,23 +42,10 @@ h2 {
 }
 
 a {
-    color: #7689fe;
+    color: #3a33ff;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-}
-
-/* Shadows */
-
-.with-box-shadow {
-    box-shadow:
-            1px 2px 4px hsl(220deg 60% 50%);
-}
-
-.with-drop-shadow {
-    filter: drop-shadow(
-            1px 2px 4px hsl(220deg 60% 50%)
-    );
 }

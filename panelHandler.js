@@ -1,53 +1,60 @@
-﻿import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js';
-
-// Variables to track the mouse position and panel's position
+﻿let currentlyDragging = null;
 let isDragging = false;
-let offsetX, offsetY;
+let offsetX = 0, offsetY = 0;
 
 export function setupPanelHandler(panel) {
-    document.addEventListener('mousedown', (event) => onMouseDown(panel, event));
-    document.addEventListener('mousemove', (event) => onMouseMove(panel, event));
-    document.addEventListener('mouseup', (event) => onMouseUp(panel, event));
+    panel.style.position = 'absolute';
+    
+    panel.addEventListener('mousedown', (event) => onMouseDown(panel, event));
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
 }
 
 function onMouseDown(panel, event) {
-    // Prevent dragging if clicking on a link
-    if (event.target.tagName === 'A') {
-        return;
+    // Prevent any text selection or other default browser behaviors while dragging
+    event.preventDefault();
+    
+    if (!currentlyDragging && !isClickableElement(event.target)) {
+        currentlyDragging = panel;
+            isDragging = true;
+            offsetX = event.clientX - panel.offsetLeft;
+            offsetY = event.clientY - panel.offsetTop;
+            
+            document.body.style.cursor = 'grabbing';
     }
-    
-    isDragging = true;
-    
-    offsetX = event.clientX - panel.getBoundingClientRect().left;
-    offsetY = event.clientY - panel.getBoundingClientRect().top;
-    
-    panel.style.cursor = 'grabbing';
 }
 
-function onMouseMove(panel, event) {
-    if (isDragging) {
+function onMouseMove(event) {
+    if (currentlyDragging && isDragging) {
         const mouseX = event.clientX;
         const mouseY = event.clientY;
         
-        // Calculate new position based on mouse movement
         let newX = mouseX - offsetX;
         let newY = mouseY - offsetY;
 
+        // Get the window & panel dimensions
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        const panelWidth = panel.offsetWidth;
-        const panelHeight = panel.offsetHeight;
-
-        // Add bound to the panel to stay within the browser window
+        const panelWidth = currentlyDragging.offsetWidth;
+        const panelHeight = currentlyDragging.offsetHeight;
+        
         newX = Math.max(0, Math.min(windowWidth - panelWidth, newX));
         newY = Math.max(0, Math.min(windowHeight - panelHeight, newY));
         
-        panel.style.left = `${newX}px`;
-        panel.style.top = `${newY}px`;
+        currentlyDragging.style.left = `${newX}px`;
+        currentlyDragging.style.top = `${newY}px`;
     }
 }
-function onMouseUp(panel, event) {
+
+function onMouseUp() {
     isDragging = false;
-    
-    panel.style.cursor = 'pointer';
+    currentlyDragging = null;
+
+    // Reset cursor to default after dragging
+    document.body.style.cursor = 'default';
+}
+
+// Function to check if the element is clickable (e.g., links, buttons)
+function isClickableElement(element) {
+    return element.tagName === 'A' || element.tagName === 'BUTTON' || element.hasAttribute('role') && element.getAttribute('role') === 'button';
 }
