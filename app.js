@@ -3,6 +3,7 @@ import { createRenderer } from './renderer.js';
 import { createCamera, frustumSize } from './camera.js';
 import { setupClickHandler } from './clickHandler.js';
 import { setupResizeHandler } from './resizeHandler.js';
+import { setupPanelHandler } from './panelHandler.js';
 
 // Main init 
 function init () {
@@ -17,6 +18,12 @@ function init () {
     
     // Init window resize handler
     setupResizeHandler(camera, frustumSize, renderer);
+    
+    // Init panel handler for UI, if one exists
+    const panel = document.getElementById('panel');
+    if (panel){
+        setupPanelHandler(panel);   
+    }
     
     animate(scene, group, camera, renderer)
 }
