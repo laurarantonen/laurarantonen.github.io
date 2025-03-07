@@ -1,5 +1,6 @@
 ﻿import { createScene } from './scene.js';
 import { createRenderer } from './renderer.js';
+import { enableScrollZoom } from './zoom.js';
 import { createCamera, frustumSize } from './camera.js';
 import { setupClickHandler } from './clickHandler.js';
 import { setupResizeHandler } from './resizeHandler.js';
@@ -10,8 +11,11 @@ function init () {
     const { scene, group } = createScene();
     const renderer = createRenderer();
     const camera = createCamera();
-
+    
     scene.add(camera);
+
+    // Enable scroll zooming with minZoom and maxZoom values
+    const disableZoom = enableScrollZoom(camera, 0.5, 2);
 
     // Init click handler for test cube
     setupClickHandler(group.children[0], camera);
@@ -28,7 +32,6 @@ function init () {
     if (secondPanel){
         setupPanelHandler(secondPanel);
     }
-
 
     animate(scene, group, camera, renderer)
 }
