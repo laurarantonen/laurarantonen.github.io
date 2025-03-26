@@ -1,4 +1,27 @@
 ﻿import * as THREE from 'three';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js';
+
+// Create a loader instance
+const loader = new GLTFLoader();
+
+// Store the loaded petal model
+let petalModel = null;
+
+// Create a promise for model loading
+export const modelLoaded = new Promise((resolve, reject) => {
+    loader.load(
+        'meshes/petal_001.glb',
+        (gltf) => {
+            petalModel = gltf.scene;
+            resolve(petalModel);
+        },
+        undefined,
+        (error) => {
+            console.error('Error loading petal model:', error);
+            reject(error);
+        }
+    );
+});
 
 function createGradientTexture(color1, color2) {
     const canvas = document.createElement('canvas');
@@ -183,41 +206,45 @@ export function createFlower(params = {}) {
     const numBends = params.stemBends !== undefined ? params.stemBends : 2;
 
     const layers = [
-        { count: params.layer1Count, scale: 0.6, height: 0.8, rotation: 0, yOffset: 0.075 },
-        { count: params.layer2Count, scale: 0.8, height: 1.0, rotation: 45, yOffset: 0.0 },
-        { count: params.layer3Count, scale: 1.0, height: 1.2, rotation: 0, yOffset: -0.075 }
+        { count: params.layer1Count, scale: 0.3, height: 0.8, rotation: 0, yOffset: 0.15 },
+        { count: params.layer2Count, scale: 0.4, height: 1.0, rotation: 45, yOffset: 0.0 },
+        { count: params.layer3Count, scale: 0.5, height: 1.2, rotation: 0, yOffset: -0.15 }
     ];
 
-    const petalShape = params.petalShape || getRandomPetalShape();
-    const petalGeometry = new THREE.ExtrudeGeometry(petalShape, { 
-        depth: Math.random() * 0.01,
-        bevelEnabled: false 
-    });
-
-    layers.forEach(layer => {
-        if (layer.count > 0) {
-            for (let i = 0; i < layer.count; i++) {
-                const petalMesh = new THREE.Mesh(petalGeometry, petalMaterial);
-                petalMesh.position.set(0, stemLength + layer.yOffset, 0);
-                petalMesh.rotation.z = (i / layer.count) * Math.PI * 2 + layer.rotation;
-                petalMesh.rotation.x = Math.PI / 2;
-                petalMesh.scale.set(layer.scale, layer.scale, layer.scale);
-                flowerGroup.add(petalMesh);
+    // Wait for the model to load before creating petals
+    if (petalModel) {
+        layers.forEach(layer => {
+            if (layer.count > 0) {
+                for (let i = 0; i < layer.count; i++) {
+                    // Clone the model for each petal
+                    const petalMesh = petalModel.clone();
+                    
+                    // Apply material to all meshes in the model
+                    petalMesh.traverse((child) => {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = petalMaterial;
+                        }
+                    });
+                    
+                    petalMesh.position.set(0, stemLength + layer.yOffset, 0);
+                    petalMesh.rotation.y = (i / layer.count) * Math.PI * 2 + layer.rotation;
+                    petalMesh.scale.set(layer.scale, layer.scale, layer.scale);
+                    flowerGroup.add(petalMesh);
+                }
             }
-        }
-    });
+        });
+    }
 
-    // Create the stem
+    // Create stem with bends
     let stemGeometry;
     if (numBends === 0) {
-        // Straight cylinder for 0 bends
         stemGeometry = new THREE.CylinderGeometry(0.075, 0.075, stemLength, 8);
     } else {
         const controlPoints = [new THREE.Vector3(0, 0, 0)];
         
         for (let i = 1; i <= numBends; i++) {
             const height = (stemLength * i) / (numBends + 1);
-            const bendAmount = 0.2 * Math.sin(i * Math.PI / 2); // Alternating bends
+            const bendAmount = 0.2 * Math.sin(i * Math.PI / 2);
             controlPoints.push(new THREE.Vector3(bendAmount, height, 0));
         }
         
@@ -226,10 +253,10 @@ export function createFlower(params = {}) {
         const stemCurve = new THREE.CatmullRomCurve3(controlPoints);
         stemGeometry = new THREE.TubeGeometry(
             stemCurve,
-            20, // segments
-            0.075, // radius
-            8, // radius segments
-            false // closed
+            20,
+            0.075,
+            8,
+            false
         );
     }
 
@@ -240,9 +267,8 @@ export function createFlower(params = {}) {
     });
     
     const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-
     if (numBends === 0) {
-        stem.position.y = stemLength / 2; // Center the straight cylinder
+        stem.position.y = stemLength / 2;
     }
     flowerGroup.add(stem);
 

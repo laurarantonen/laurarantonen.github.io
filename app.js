@@ -1,5 +1,5 @@
 ﻿import * as THREE from 'three';
-import { createScene, createFlower, getRandomPetalShape, getRandomPetalColors } from './scene.js';
+import { createScene, createFlower, getRandomPetalShape, getRandomPetalColors, modelLoaded } from './scene.js';
 import { setupPanelHandler } from './panelHandler.js';
 import { setupOrbitControls } from './orbitControls.js';
 
@@ -7,8 +7,7 @@ let scene, camera, renderer, flowerGroup, controls;
 let currentPetalShape = null; // For storing the current chosen petal shape
 let autoRotate = true; // Control for camera rotation
 
-
-function init() {
+async function init() {
     scene = createScene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 3, 5);
@@ -18,6 +17,9 @@ function init() {
     document.body.appendChild(renderer.domElement);
     
     controls = setupOrbitControls(camera, renderer);
+    
+    // Wait for the model to load before continuing
+    await modelLoaded;
     
     /*Initialize all UI elements*/
 
