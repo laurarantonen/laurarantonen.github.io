@@ -180,6 +180,7 @@ export function createFlower(params = {}) {
     });
 
     const stemLength = params.stemLength || 4;
+    const numBends = params.stemBends !== undefined ? params.stemBends : 2;
 
     const layers = [
         { count: params.layer1Count, scale: 0.6, height: 0.8, rotation: 0, yOffset: 0.075 },
@@ -206,10 +207,43 @@ export function createFlower(params = {}) {
         }
     });
 
-    const stemGeometry = new THREE.CylinderGeometry(0.075, 0.075, stemLength, 10);
-    const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 });
+    // Create the stem
+    let stemGeometry;
+    if (numBends === 0) {
+        // Straight cylinder for 0 bends
+        stemGeometry = new THREE.CylinderGeometry(0.075, 0.075, stemLength, 8);
+    } else {
+        const controlPoints = [new THREE.Vector3(0, 0, 0)];
+        
+        for (let i = 1; i <= numBends; i++) {
+            const height = (stemLength * i) / (numBends + 1);
+            const bendAmount = 0.2 * Math.sin(i * Math.PI / 2); // Alternating bends
+            controlPoints.push(new THREE.Vector3(bendAmount, height, 0));
+        }
+        
+        controlPoints.push(new THREE.Vector3(0, stemLength, 0));
+        
+        const stemCurve = new THREE.CatmullRomCurve3(controlPoints);
+        stemGeometry = new THREE.TubeGeometry(
+            stemCurve,
+            20, // segments
+            0.075, // radius
+            8, // radius segments
+            false // closed
+        );
+    }
+
+    const stemMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x228B22,
+        roughness: 0.8,
+        metalness: 0.1
+    });
+    
     const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-    stem.position.y = stemLength / 2;
+
+    if (numBends === 0) {
+        stem.position.y = stemLength / 2; // Center the straight cylinder
+    }
     flowerGroup.add(stem);
 
     return flowerGroup;

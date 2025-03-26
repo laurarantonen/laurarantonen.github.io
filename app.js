@@ -31,6 +31,7 @@ function init() {
     const layer2Count = document.getElementById('layer2Count');
     const layer3Count = document.getElementById('layer3Count');
     const stemLength = document.getElementById('stemLength');
+    const stemBends = document.getElementById('stemBends');
     const gradientColor1 = document.getElementById('gradientColor1');
     const gradientColor2 = document.getElementById('gradientColor2');
     const regenerateBtn = document.getElementById('regenerateBtn');
@@ -42,6 +43,7 @@ function init() {
     document.getElementById('layer2CountValue').textContent = layer2Count.value;
     document.getElementById('layer3CountValue').textContent = layer3Count.value;
     document.getElementById('stemLengthValue').textContent = stemLength.value;
+    document.getElementById('stemBendsValue').textContent = stemBends.value;
     
     // Initialize petal shape
     currentPetalShape = getRandomPetalShape();
@@ -67,6 +69,11 @@ function init() {
     
     stemLength.addEventListener('input', (e) => {
         document.getElementById('stemLengthValue').textContent = e.target.value;
+        updateFlower();
+    });
+    
+    stemBends.addEventListener('input', (e) => {
+        document.getElementById('stemBendsValue').textContent = e.target.value;
         updateFlower();
     });
     
@@ -165,6 +172,7 @@ function updateFlower() {
         layer2Count: parseInt(document.getElementById('layer2Count').value),
         layer3Count: parseInt(document.getElementById('layer3Count').value),
         stemLength: parseFloat(document.getElementById('stemLength').value),
+        stemBends: parseInt(document.getElementById('stemBends').value),
         gradientColor1: document.getElementById('gradientColor1').value,
         gradientColor2: document.getElementById('gradientColor2').value,
         petalShape: currentPetalShape
