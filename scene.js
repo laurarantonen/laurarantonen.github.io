@@ -4,20 +4,61 @@ import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/j
 // Create a loader instance
 const loader = new GLTFLoader();
 
-// Store the loaded petal model
-let petalModel = null;
+// Store the loaded petal models
+let petalModels = {
+    model1: null,
+    model2: null,
+    model3: null,
+    currentModel: null  // Add this to store the current model being used
+};
 
 // Create a promise for model loading
 export const modelLoaded = new Promise((resolve, reject) => {
+    let loadedCount = 0;
+    const totalModels = 3;
+
+    const onLoad = () => {
+        loadedCount++;
+        if (loadedCount === totalModels) {
+            resolve(petalModels);
+        }
+    };
+
     loader.load(
         'meshes/petal_001.glb',
         (gltf) => {
-            petalModel = gltf.scene;
-            resolve(petalModel);
+            petalModels.model1 = gltf.scene;
+            onLoad();
         },
         undefined,
         (error) => {
-            console.error('Error loading petal model:', error);
+            console.error('Error loading petal model 1:', error);
+            reject(error);
+        }
+    );
+
+    loader.load(
+        'meshes/petal_002.glb',
+        (gltf) => {
+            petalModels.model2 = gltf.scene;
+            onLoad();
+        },
+        undefined,
+        (error) => {
+            console.error('Error loading petal model 2:', error);
+            reject(error);
+        }
+    );
+
+    loader.load(
+        'meshes/petal_003.glb',
+        (gltf) => {
+            petalModels.model3 = gltf.scene;
+            onLoad();
+        },
+        undefined,
+        (error) => {
+            console.error('Error loading petal model 3:', error);
             reject(error);
         }
     );
@@ -45,95 +86,23 @@ function createGradientTexture(color1, color2) {
     return texture;
 }
 
-// Petal shape generation functions
-function getRoundPetalShape() {
-    const shape = new THREE.Shape();
-    const width = Math.random() * 0.4 + 0.3;
-    const height = Math.random() * 0.5 + 1.0;
-    
-    shape.moveTo(0, 0);
-    shape.quadraticCurveTo(width, height * 0.3, width, height * 0.5);
-    shape.quadraticCurveTo(width, height * 0.7, 0, height);
-    shape.quadraticCurveTo(-width, height * 0.7, -width, height * 0.5);
-    shape.quadraticCurveTo(-width, height * 0.3, 0, 0);
-    
-    return shape;
-}
-
-function getDiamondPetalShape() {
-    const shape = new THREE.Shape();
-    const width = Math.random() * 0.4 + 0.3;
-    const height = Math.random() * 0.5 + 1.0;
-    
-    shape.moveTo(0, 0);
-    shape.lineTo(width, height * 0.5);
-    shape.lineTo(0, height);
-    shape.lineTo(-width, height * 0.5);
-    shape.lineTo(0, 0);
-    
-    return shape;
-}
-
-function getHeartPetalShape() {
-    const shape = new THREE.Shape();
-    const width = Math.random() * 0.4 + 0.3;
-    const height = Math.random() * 0.5 + 1.0;
-    
-    shape.moveTo(0, 0);
-    shape.quadraticCurveTo(width * 0.5, height * 0.3, width, height * 0.5);
-    shape.quadraticCurveTo(width * 0.5, height * 0.7, 0, height);
-    shape.quadraticCurveTo(-width * 0.5, height * 0.7, -width, height * 0.5);
-    shape.quadraticCurveTo(-width * 0.5, height * 0.3, 0, 0);
-    
-    return shape;
-}
-
-function getNaturalPetalShape() {
-    const shape = new THREE.Shape();
-    const width = Math.random() * 0.4 + 0.3;
-    const height = Math.random() * 0.5 + 1.0;
-    
-    const curves = Array(4).fill().map(() => Math.random() * 0.2 + 0.7);
-    const heightVars = Array(4).fill().map(() => Math.random() * 0.2 - 0.1);
-    
-    shape.moveTo(0, 0);
-    shape.quadraticCurveTo(
-        width * curves[0], 
-        height * 0.3 + heightVars[0],
-        width, 
-        height * 0.5 + 0.3
-    );
-    shape.quadraticCurveTo(
-        width * curves[1], 
-        height * 0.7 + heightVars[1],
-        0, 
-        height + 0.5
-    );
-    shape.quadraticCurveTo(
-        -width * curves[2], 
-        height * 0.7 + heightVars[2],
-        -width, 
-        height * 0.5 + 0.3
-    );
-    shape.quadraticCurveTo(
-        -width * curves[3], 
-        height * 0.3 + heightVars[3],
-        0, 
-        0
-    );
-    
-    return shape;
-}
-
 function getRandomPetalShape() {
-    const shapeTypes = [
-        getRoundPetalShape,
-        getDiamondPetalShape,
-        getHeartPetalShape,
-        getNaturalPetalShape
-    ];
-    
-    return shapeTypes[Math.floor(Math.random() * shapeTypes.length)]();
+    if (petalModels.model1 && petalModels.model2 && petalModels.model3) {
+        // Cycle through models in sequence: model1 -> model2 -> model3 -> model1
+        if (!petalModels.currentModel) {
+            petalModels.currentModel = petalModels.model1;
+        } else if (petalModels.currentModel === petalModels.model1) {
+            petalModels.currentModel = petalModels.model2;
+        } else if (petalModels.currentModel === petalModels.model2) {
+            petalModels.currentModel = petalModels.model3;
+        } else {
+            petalModels.currentModel = petalModels.model1;
+        }
+        return petalModels.currentModel;
+    }
+    // Fallback to model1 if other models aren't loaded yet
+    petalModels.currentModel = petalModels.model1;
+    return petalModels.currentModel;
 }
 
 function getRandomPetalColors() {
@@ -212,12 +181,14 @@ export function createFlower(params = {}) {
     ];
 
     // Wait for the model to load before creating petals
-    if (petalModel) {
+    if (petalModels.model1 && petalModels.model2) {
+        // Use current model if it exists, otherwise get a new random one
+        const modelToUse = petalModels.currentModel || getRandomPetalShape();
+        
         layers.forEach(layer => {
             if (layer.count > 0) {
                 for (let i = 0; i < layer.count; i++) {
-                    // Clone the model for each petal
-                    const petalMesh = petalModel.clone();
+                    const petalMesh = modelToUse.clone();
                     
                     // Apply material to all meshes in the model
                     petalMesh.traverse((child) => {
