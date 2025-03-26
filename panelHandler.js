@@ -56,5 +56,5 @@ function onMouseUp() {
 
 // Function to check if the element is clickable (e.g., links, buttons)
 function isClickableElement(element) {
-    return element.tagName === 'A' || element.tagName === 'BUTTON' || element.hasAttribute('role') && element.getAttribute('role') === 'button';
+    return element.tagName === 'A' || element.tagName === 'BUTTON'  || element.tagName === 'INPUT' || element.hasAttribute('role') && element.getAttribute('role') === 'button';
 }
