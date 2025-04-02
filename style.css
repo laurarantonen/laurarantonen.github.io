@@ -150,6 +150,14 @@ h2 {
     z-index: 2;
     max-height: 90vh;
     overflow-y: auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.panel.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 #flowerControls {
@@ -217,10 +225,15 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
 #showFlowerControls.visible {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 #mainPanel {
@@ -230,6 +243,14 @@ h2 {
     left: 0px;
     top: 0px;   
     max-width: 320px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+#mainPanel.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .drag-indicator {
@@ -249,4 +270,57 @@ h2 {
     color: #6b6b6b;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.flowers {
+    display: flex;
+    gap: 10px;
+}
+
+@keyframes flowers {
+    0%,
+    100% {
+        color: black;
+        transform: translateY(0);
+    }
+    50% {
+        color: #059907;
+        transform: translateY(20px);
+    }
+}
+
+.flowers span {
+    --delay: 0s;
+    animation: flowers 1s var(--delay) infinite ease-in;
+    font-size: 24px;
+}
+
+.flowers span:nth-child(1) { --delay: 0s; }
+.flowers span:nth-child(2) { --delay: 0.1s; }
+.flowers span:nth-child(3) { --delay: 0.3s; }
+.flowers span:nth-child(4) { --delay: 0.4s; }
+.flowers span:nth-child(5) { --delay: 0.5s; }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

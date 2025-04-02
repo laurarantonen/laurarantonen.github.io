@@ -10,6 +10,9 @@ let currentPetalShape = null;
 let autoRotate = true;
 
 async function init() {
+    const loader = document.getElementById('loader');
+    
+    // Initialize Three.js scene
     scene = createScene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 3, 5);
@@ -19,13 +22,58 @@ async function init() {
     document.body.appendChild(renderer.domElement);
     
     controls = setupOrbitControls(camera, renderer);
-    await modelLoaded;
     
-    const mainPanel = document.getElementById('mainPanel');
-    if (mainPanel) {
-        setupPanelHandler(mainPanel);   
-    }
+    try {
+        // Wait for both the models to load AND at least a second to pass
+        await Promise.all([
+            modelLoaded,
+            new Promise(resolve => setTimeout(resolve, 1000))
+        ]);
+        loader.style.display = 'none';
+        
+        // Init UI elements after loader is hidden
+        const mainPanel = document.getElementById('mainPanel');
+        const flowerControls = document.getElementById('flowerControls');
+        
+        if (mainPanel) {
+            setupPanelHandler(mainPanel);
+            setTimeout(() => {
+                mainPanel.classList.add('visible');
+                if (flowerControls) {
+                    flowerControls.classList.add('visible');
+                }
+            }, 100);
+        }
 
+        const layer1Count = document.getElementById('layer1Count');
+        const layer2Count = document.getElementById('layer2Count');
+        const layer3Count = document.getElementById('layer3Count');
+        const stemLength = document.getElementById('stemLength');
+        const stemBends = document.getElementById('stemBends');
+        const numLeaves = document.getElementById('numLeaves');
+        const gradientColor1 = document.getElementById('gradientColor1');
+        const gradientColor2 = document.getElementById('gradientColor2');
+        const regenerateBtn = document.getElementById('regenerateBtn');
+        const changeShapeBtn = document.getElementById('changeShapeBtn');
+        const autoRotateCheckbox = document.getElementById('autoRotate');
+        
+        document.getElementById('layer1CountValue').textContent = layer1Count.value;
+        document.getElementById('layer2CountValue').textContent = layer2Count.value;
+        document.getElementById('layer3CountValue').textContent = layer3Count.value;
+        document.getElementById('stemLengthValue').textContent = stemLength.value;
+        document.getElementById('stemBendsValue').textContent = stemBends.value;
+        document.getElementById('numLeavesValue').textContent = numLeaves.value;
+        
+        currentPetalShape = getRandomPetalShape();
+        randomizeColors();
+        updateFlower(true, true);
+    } catch (error) {
+        console.error('Error loading models:', error);
+        // Still wait 2 seconds even if there's an error
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        loader.style.display = 'none';
+    }
+    
     const layer1Count = document.getElementById('layer1Count');
     const layer2Count = document.getElementById('layer2Count');
     const layer3Count = document.getElementById('layer3Count');
@@ -45,10 +93,6 @@ async function init() {
     document.getElementById('stemBendsValue').textContent = stemBends.value;
     document.getElementById('numLeavesValue').textContent = numLeaves.value;
     
-    currentPetalShape = getRandomPetalShape();
-    randomizeColors();
-    updateFlower(true, true);
-
     layer1Count.addEventListener('input', () => {
         document.getElementById('layer1CountValue').textContent = layer1Count.value;
         updateFlower(false, false);
