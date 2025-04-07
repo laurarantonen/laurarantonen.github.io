@@ -64,6 +64,13 @@ async function init() {
         document.getElementById('stemBendsValue').textContent = stemBends.value;
         document.getElementById('numLeavesValue').textContent = numLeaves.value;
         
+        // Set initial values for flower on first page load
+        stemBends.value = Math.max(1, Math.floor(Math.random() * 4)); // At least 1 bend
+        document.getElementById('stemBendsValue').textContent = stemBends.value;
+        
+        numLeaves.value = Math.max(2, Math.floor(Math.random() * 9)); // At least 2 leaves
+        document.getElementById('numLeavesValue').textContent = numLeaves.value;
+        
         currentPetalShape = getRandomPetalShape();
         randomizeColors();
         updateFlower(true, true);
@@ -188,6 +195,14 @@ function randomizeColors() {
         gradientColor1.value = petalColors.color1;
         gradientColor2.value = petalColors.color2;
     }
+    
+    // Randomize stem bends (0-3)
+    stemBends.value = Math.floor(Math.random() * 4);
+    document.getElementById('stemBendsValue').textContent = stemBends.value;
+    
+    // Randomize number of leaves (0-8)
+    numLeaves.value = Math.floor(Math.random() * 9);
+    document.getElementById('numLeavesValue').textContent = numLeaves.value;
 }
 
 function updateFlower(regenerate = false, updateLeaves = false) {
