@@ -324,3 +324,37 @@ h2 {
         transform: translateY(0);
     }
 }
+
+.export-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.export-controls select {
+    padding: 5px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background: #ffffff;
+    font-family: "Noto Sans Mono", monospace;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.export-controls button {
+    flex: 1;
+    padding: 5px 5px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background: #ffffff;
+    color: black;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: "Noto Sans Mono", monospace;
+    font-size: 1em;
+}
+
+.export-controls button:hover {
+    background: #ebebeb;
+}

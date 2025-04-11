@@ -4,6 +4,8 @@ import { createScene } from './scene.js';
 import { setupPanelHandler } from './panelHandler.js';
 import { setupOrbitControls } from './orbitControls.js';
 import { modelLoaded } from './meshLoader.js';
+import { OBJExporter } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/exporters/OBJExporter.js';
+import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/exporters/GLTFExporter.js';
 
 let scene, camera, renderer, flowerGroup, stemGroup, controls;
 let currentPetalShape = null;
@@ -61,10 +63,8 @@ async function init() {
         document.getElementById('layer2CountValue').textContent = layer2Count.value;
         document.getElementById('layer3CountValue').textContent = layer3Count.value;
         document.getElementById('stemLengthValue').textContent = stemLength.value;
-        document.getElementById('stemBendsValue').textContent = stemBends.value;
-        document.getElementById('numLeavesValue').textContent = numLeaves.value;
         
-        // Set initial values for flower on first page load
+        // Set initial values for first flower before generation
         stemBends.value = Math.max(1, Math.floor(Math.random() * 4)); // At least 1 bend
         document.getElementById('stemBendsValue').textContent = stemBends.value;
         
@@ -173,6 +173,49 @@ async function init() {
         flowerControls.classList.remove('hidden');
         showFlowerControlsButton.classList.remove('visible');
     });
+
+    const exportBtn = document.getElementById('exportBtn');
+    const exportFormat = document.getElementById('exportFormat');
+    
+    exportBtn.addEventListener('click', () => {
+        if (flowerGroup) {
+            const format = exportFormat.value;
+            
+            if (format === 'obj') {
+                const exporter = new OBJExporter();
+                const result = exporter.parse(flowerGroup);
+                const blob = new Blob([result], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'flower.obj';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } else if (format === 'gltf') {
+                const exporter = new GLTFExporter();
+                const options = {
+                    binary: false,
+                    onlyVisible: true,
+                    maxTextureSize: 4096,
+                    includeCustomExtensions: true
+                };
+                
+                exporter.parse(flowerGroup, (gltf) => {
+                    const blob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'flower.gltf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, options);
+            }
+        }
+    });
 }
 
 function reCenterCamera() {
@@ -196,12 +239,12 @@ function randomizeColors() {
         gradientColor2.value = petalColors.color2;
     }
     
-    // Randomize stem bends (0-3)
-    stemBends.value = Math.floor(Math.random() * 4);
+    // Randomize stem bends (1-3)
+    stemBends.value = Math.max(1, Math.floor(Math.random() * 4));
     document.getElementById('stemBendsValue').textContent = stemBends.value;
     
-    // Randomize number of leaves (0-8)
-    numLeaves.value = Math.floor(Math.random() * 9);
+    // Randomize number of leaves (2-8)
+    numLeaves.value = Math.max(2, Math.floor(Math.random() * 9));
     document.getElementById('numLeavesValue').textContent = numLeaves.value;
 }
 
