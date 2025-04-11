@@ -340,10 +340,10 @@ h2 {
     font-family: "Noto Sans Mono", monospace;
     font-size: 1em;
     cursor: pointer;
+    width: 80px;
 }
 
 .export-controls button {
-    flex: 1;
     padding: 5px 5px;
     border: 1px solid #000000;
     border-radius: 5px;
@@ -353,6 +353,7 @@ h2 {
     transition: background 0.3s ease;
     font-family: "Noto Sans Mono", monospace;
     font-size: 1em;
+    flex: 1;
 }
 
 .export-controls button:hover {
