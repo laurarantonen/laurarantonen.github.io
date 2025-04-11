@@ -11,21 +11,18 @@ function getPointOnCurve(curve, t) {
 
 export function getRandomPetalColors() {
     const colors = [
-        { color1: '#FF69B4', color2: '#FF1493' },
+        { color1: '#FEF6F6', color2: '#FF1493' },
         { color1: '#FFF7CC', color2: '#FF69B4' },
         { color1: '#9370DB', color2: '#4B0082' },
         { color1: '#DDA0DD', color2: '#800080' },
         { color1: '#87CEEB', color2: '#000080' },
         { color1: '#709BFF', color2: '#00008B' },
-        { color1: '#98FB98', color2: '#006400' },
         { color1: '#90EE90', color2: '#228B22' },
-        { color1: '#FFD700', color2: '#FFA500' },
-        { color1: '#FFA07A', color2: '#FF4500' },
-        { color1: '#FFDAB9', color2: '#FFA07A' },
-        { color1: '#FFFFFF', color2: '#DEB887' },
-        { color1: '#00CED1', color2: '#008B8B' },
-        { color1: '#E0FFFF', color2: '#20B2AA' },
-        { color1: '#E6E6FA', color2: '#9370DB' },
+        { color1: '#FFD700', color2: '#EB1000' },
+        { color1: '#FFDAB9', color2: '#FE2D16' },
+        { color1: '#FFFFFF', color2: '#FFDEB3' },
+        { color1: '#000000', color2: '#3DFFFF' },
+        { color1: '#E6E6FA', color2: '#6F3AD9' },
         { color1: '#B0E0E6', color2: '#4169E1' }
     ];
     return colors[Math.floor(Math.random() * colors.length)];
@@ -55,8 +52,9 @@ export function createPetals(params) {
     const petalMaterial = new THREE.MeshStandardMaterial({ 
         map: gradientTexture,
         side: THREE.DoubleSide,
-        roughness: 0.7,
-        metalness: 0.0
+        roughness: 1.0,
+        metalness: 0.0,
+        name: 'petalMaterial'
     });
 
     const layers = [
@@ -129,8 +127,9 @@ export function createLeaves(params, stemCurve) {
     const leafMaterial = new THREE.MeshStandardMaterial({
         map: leafGradientTexture,
         side: THREE.DoubleSide,
-        roughness: 0.7,
-        metalness: 0.0
+        roughness: 1.0,
+        metalness: 0.0,
+        name: 'leafMaterial'
     });
 
     for (let i = 0; i < numLeaves; i++) {
