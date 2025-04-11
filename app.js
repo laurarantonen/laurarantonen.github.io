@@ -17,14 +17,13 @@ async function init() {
     // Initialize Three.js scene
     scene = createScene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 6, 5);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     document.body.appendChild(renderer.domElement);
     
     controls = setupOrbitControls(camera, renderer);
-    controls.target.set(0, 4, 0); // Set the target to the middle of the flower
+    controls.target.set(0, 0, 0);
     
     try {
         // Wait for both the models to load AND at least a second to pass
