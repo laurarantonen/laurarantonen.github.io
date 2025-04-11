@@ -27,8 +27,14 @@ export function createGradientTexture(color1, color2) {
 export function createScene() {
     const scene = new THREE.Scene();
     scene.background = null;
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    
+    scene.fog = new THREE.FogExp2(0xf0f0f0, 0.065);
+    
+    const gridHelper = new THREE.GridHelper(50, 50, 0x9c9a9a, 0x9c9a9a);
+    gridHelper.position.y = 0;
+    scene.add(gridHelper);
+    
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);

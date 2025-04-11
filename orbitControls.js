@@ -7,11 +7,11 @@ export function setupOrbitControls(camera, renderer) {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.screenSpacePanning = false;
-    controls.minDistance = 3;
-    controls.maxDistance = 10;
+    controls.minDistance = 2;
+    controls.maxDistance = 12;
     controls.maxPolarAngle = Math.PI / 2;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.75;
+    controls.autoRotateSpeed = 0.3;
     
     return controls;
 } 

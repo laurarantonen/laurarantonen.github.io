@@ -54,7 +54,8 @@ export function createPetals(params) {
         side: THREE.DoubleSide,
         roughness: 1.0,
         metalness: 0.0,
-        name: 'petalMaterial'
+        name: 'petalMaterial',
+        fog: false
     });
 
     const layers = [
@@ -107,7 +108,8 @@ export function createStem(params) {
     const stemMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x228B22,
         roughness: 0.8,
-        metalness: 0.1
+        metalness: 0.1,
+        fog: false
     });
     
     const stem = new THREE.Mesh(stemGeometry, stemMaterial);
@@ -129,7 +131,8 @@ export function createLeaves(params, stemCurve) {
         side: THREE.DoubleSide,
         roughness: 1.0,
         metalness: 0.0,
-        name: 'leafMaterial'
+        name: 'leafMaterial',
+        fog: false
     });
 
     for (let i = 0; i < numLeaves; i++) {
@@ -165,7 +168,7 @@ export function createLeaves(params, stemCurve) {
 export function createFlower(params = {}) {
     const flowerGroup = new THREE.Group();
     flowerGroup.rotation.y = Math.PI;
-    flowerGroup.position.y = -3;
+    flowerGroup.position.y = 0;
 
     const { stem, stemCurve } = createStem(params);
     flowerGroup.add(stem);

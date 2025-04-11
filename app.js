@@ -17,13 +17,14 @@ async function init() {
     // Initialize Three.js scene
     scene = createScene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 3, 5);
+    camera.position.set(0, 6, 5);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     document.body.appendChild(renderer.domElement);
     
     controls = setupOrbitControls(camera, renderer);
+    controls.target.set(0, 4, 0); // Set the target to the middle of the flower
     
     try {
         // Wait for both the models to load AND at least a second to pass
@@ -218,20 +219,6 @@ async function init() {
     });
 }
 
-function reCenterCamera() {
-    if (flowerGroup) {
-        flowerGroup.position.set(0, 0, 0);
-        flowerGroup.rotation.set(0, 0, 0);
-    }
-
-    camera.position.set(0, 3, 5);
-    camera.lookAt(0, 1, 0);
-
-    controls.reset();
-    controls.target.set(0, 1, 0);
-    controls.update();
-}
-
 function randomizeColors() {
     const petalColors = getRandomPetalColors();
     if (petalColors) {
@@ -268,7 +255,7 @@ function updateFlower(regenerate = false, updateLeaves = false) {
     if (!flowerGroup) {
         flowerGroup = new THREE.Group();
         flowerGroup.rotation.y = Math.PI;
-        flowerGroup.position.y = -3;
+        flowerGroup.position.y = 0;
         scene.add(flowerGroup);
 
         stemGroup = new THREE.Group();
